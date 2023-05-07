@@ -24,15 +24,12 @@ if not os.path.exists(result_path):
     os.makedirs(result_path, exist_ok=True)
 
 # видаляємо всі файли з папки result
-for file_name in os.listdir(result_path):
-    os.remove(os.path.join(result_path, file_name))
+[os.remove(os.path.join(result_path, i)) for i in os.listdir(result_path)]
 
-lines = []
 # відкриваємо текстовий CSV файл для читання
 with open(data_path + data_list, 'r') as f:
-    # проходимо по кожному рядку в файлі
-    for line in f:
-        lines.append(line)
+    # отримуємо список рядків
+    lines = [i for i in f]
 
 pib_remember = ''
 position_remember = ''
@@ -82,5 +79,6 @@ for line in lines:
                 cell.text = cell.text.replace("%DATE1%", date1)
 
     # зберігаємо новий документ Word зі значеннями з рядка
-    print(f'result{os.sep}{mydate1} {pib1} {pib2_short}{pib3_short} {mydate2}.docx')
-    document.save(f'result{os.sep}{mydate1} {pib1} {pib2_short}{pib3_short} {mydate2}.docx')
+    document_name = f'result{os.sep}{mydate1} {pib1} {pib2_short}{pib3_short} {mydate2}.docx'
+    print(document_name)
+    document.save(document_name)
