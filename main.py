@@ -4,6 +4,7 @@
 
 import datetime
 import os
+import csv
 # pip install python-docx
 from docx import Document
 
@@ -26,32 +27,33 @@ if not os.path.exists(result_path):
 # видаляємо всі файли з папки result
 [os.remove(os.path.join(result_path, i)) for i in os.listdir(result_path)]
 
-# відкриваємо текстовий CSV файл для читання
-with open(data_path + data_list, 'r') as f:
-    # отримуємо список рядків
-    lines = [i for i in f]
+# читаємо CSV файл
+with open(data_path + data_list, newline='') as csv_file:
+    context = csv.reader(csv_file, delimiter=';')
+    lines = [i for i in context]
 
 pib_remember = ''
 position_remember = ''
 
 for line in lines:
-    # розділяємо значення з рядка
-    values = line.strip().split(';')
-    if values[1] == '':
-        values[1] = pib_remember
-    if values[2] == '':
-        values[2] = position_remember
+    if line[1] != '':
+        pib = line[1]
+        pib_remember = pib
+    else:
+        pib = pib_remember
+
+    if line[2] != '':
+        position = line[2]
+        position_remember = position
+    else:
+        position = position_remember
 
     # присвоюємо значення
-    date2 = values[0]
+    date2 = line[0]
     date1_obj = datetime.datetime.strptime(date2, date_format) - datetime.timedelta(weeks=2)
     date1 = date1_obj.strftime(date_format)
     date1_values = date1.strip().split('.')
     mydate1 = date1_values[2] + '-' + date1_values[1] + '-' + date1_values[0]
-    pib = values[1]
-    position = values[2]
-    pib_remember = pib
-    position_remember = position
 
     date2_values = date2.strip().split('.')
     mydate2 = date2_values[2] + '-' + date2_values[1] + '-' + date2_values[0]
