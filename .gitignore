@@ -2,4 +2,4 @@
 __pycache__/
 result/
 data/list.csv
-venv/
+.venv/
